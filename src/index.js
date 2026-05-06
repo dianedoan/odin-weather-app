@@ -21,7 +21,9 @@ async function getWeather(searchLocation) {
     const processedData = processRequiredData(weatherData);
     console.log(processedData);
 
-    console.log(`The current temperature in ${searchLocation.charAt(0).toUpperCase() + searchLocation.slice(1)} is ${processedData.currentTemp} °C.`);
+    // display weather info
+    displayWeatherInfo(processedData);
+
   } catch (error) {
     console.error(error);
   }
@@ -48,12 +50,49 @@ function processRequiredData(data) {
   };
 };
 
-const container = document.querySelector(".container");
+// display weather info
+async function displayWeatherInfo(processedData) {
+  const container = document.querySelector(".container");
+  const weatherContainer = document.querySelector(".weather-container");
+
+  const currentWeatherContainer = document.createElement("div");
+  currentWeatherContainer.classList = "current-weather-container";
+
+  // clear any existing displayed weather info
+  weatherContainer.innerHTML = "";
+
+  // append containers
+  weatherContainer.appendChild(currentWeatherContainer);
+  container.appendChild(weatherContainer);
+
+  // location
+  const locationHeader = document.createElement("h1");
+  locationHeader.textContent = processedData.location;
+  currentWeatherContainer.appendChild(locationHeader);
+
+  // current temperature
+  const tempHeader = document.createElement("h2");
+  tempHeader.textContent = `${processedData.currentTemp} °C`;
+  currentWeatherContainer.appendChild(tempHeader);
+
+  // time
+  const timeHeader = document.createElement("h3");
+  timeHeader.textContent = `${processedData.currentTime} ${processedData.timezone}`;
+  currentWeatherContainer.appendChild(timeHeader);
+
+  // description
+  const descriptionHeader = document.createElement("h3");
+  descriptionHeader.textContent = processedData.description;
+  currentWeatherContainer.appendChild(descriptionHeader);
+
+};
+
+// location search bar
 const searchLocationForm = document.querySelector("#search-location-form");
 const searchLocation = document.querySelector("#search-location");
 
-// location search bar
 searchLocationForm.addEventListener("submit", (e) => {
   e.preventDefault();
   getWeather(searchLocation.value);
 });
+
