@@ -75,6 +75,10 @@ async function displayWeatherInfo(processedData) {
   tempHeader.textContent = `${processedData.currentTemp} °C`;
   currentWeatherContainer.appendChild(tempHeader);
 
+  // icon
+  const weatherIcon = await loadWeatherIcon(processedData.icon);
+  currentWeatherContainer.appendChild(weatherIcon);
+
   // time
   const timeHeader = document.createElement("h3");
   timeHeader.textContent = `${processedData.currentTime} ${processedData.timezone}`;
@@ -85,6 +89,16 @@ async function displayWeatherInfo(processedData) {
   descriptionHeader.textContent = processedData.description;
   currentWeatherContainer.appendChild(descriptionHeader);
 
+};
+
+export async function loadWeatherIcon(weatherIcon) {
+  const module = await import(`./weather-icons/${weatherIcon}.svg`);
+
+  const img = document.createElement("img");
+  img.src = module.default;
+  img.classList = "weather-icon";
+
+  return img;
 };
 
 // location search bar
