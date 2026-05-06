@@ -1,13 +1,12 @@
 import "./styles.css";
 
 // test variables
-const city = 'seoul'; // ability to search location later
 const unit = 'metric'; // toggle temp in Fahrenheit or Celsius later
 
 // takes a location and returns the weather data for that location using an API
-async function getWeather() {
+async function getWeather(searchLocation) {
   try {
-    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=${unit}&key=QTUFMCGUGM8BXJ6A3KDDSUWYJ`)
+    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchLocation}?unitGroup=${unit}&key=QTUFMCGUGM8BXJ6A3KDDSUWYJ`)
 
     // check for response errors
     if (!response.ok) {
@@ -22,7 +21,7 @@ async function getWeather() {
     const processedData = processRequiredData(weatherData);
     console.log(processedData);
 
-    console.log(`The current temperature in ${city.charAt(0).toUpperCase() + city.slice(1)} is ${processedData.currentTemp} °C.`);
+    console.log(`The current temperature in ${searchLocation.charAt(0).toUpperCase() + searchLocation.slice(1)} is ${processedData.currentTemp} °C.`);
   } catch (error) {
     console.error(error);
   }
@@ -49,4 +48,12 @@ function processRequiredData(data) {
   };
 };
 
-getWeather();
+const container = document.querySelector(".container");
+const searchLocationForm = document.querySelector("#search-location-form");
+const searchLocation = document.querySelector("#search-location");
+
+// location search bar
+searchLocationForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  getWeather(searchLocation.value);
+});
