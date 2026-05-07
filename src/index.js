@@ -210,7 +210,7 @@ function displayError() {
   weatherContainer.style.color = "#000";
 
   // display message
-  const errorMessage = "Could not find city, please try again :(";
+  const errorMessage = "Error finding city, please try again :(";
   displayMessage(weatherContainer, errorMessage);
 };
 
