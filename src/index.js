@@ -1,34 +1,11 @@
 import "./styles.css";
 
-// default temp unit
-let tempUnit = "metric";
-
-const tempUnitToggle = document.createElement("input");
-tempUnitToggle.type = "checkbox";
-
-tempUnitToggle.addEventListener("change", (e) => {
-  e.preventDefault();
-
-  if (tempUnitToggle.checked) {
-    tempUnit = "us";
-  } else {
-    tempUnit = "metric";
-  }
-  getWeather(searchLocation.value, tempUnit);
-});
-
-// location search bar
-const searchLocationForm = document.querySelector("#search-location-form");
-const searchLocation = document.querySelector("#search-location");
-
-searchLocationForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  getWeather(searchLocation.value, tempUnit);
-});
-
-// takes a location and returns the weather data for that location using an API
+// take a location and return the weather data for that location using an API
 async function getWeather(searchLocation, tempUnit) {
   try {
+    // display loading component
+    displayMessage(weatherContainer, "Loading...");
+
     const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchLocation}?unitGroup=${tempUnit}&key=QTUFMCGUGM8BXJ6A3KDDSUWYJ`);
 
     // check for response errors
@@ -48,12 +25,14 @@ async function getWeather(searchLocation, tempUnit) {
     displayWeatherInfo(processedData, tempUnit);
 
   } catch (error) {
+    // display error message
+    const errorMessage = "Error finding city, please try again :(";
+    displayMessage(weatherContainer, errorMessage);
     console.error(error);
-    displayError();
   }
 };
 
-// processes JSON data from the API and returns an object with only required data for the app
+// process JSON data from the API and return an object with only required data for the app
 function processRequiredData(data) {
   return {
     location: data.resolvedAddress,
@@ -77,27 +56,14 @@ function processRequiredData(data) {
   };
 };
 
-const container = document.querySelector(".container");
-const weatherContainer = document.querySelector(".weather-container");
-
-const currentWeatherContainer = document.createElement("div");
-currentWeatherContainer.classList = "current-weather-container";
-
-const weeklyWeatherContainer = document.createElement("div");
-weeklyWeatherContainer.classList = "weekly-weather-container";
-
-// default startup message
-const message = "Use the search bar to look up the weather of a city!";
-displayMessage(weatherContainer, message);
-
-(async () => {
-  const cloudyIcon = await getWeatherIcon("cloudy");
-  defaultIcons.appendChild(cloudyIcon);
-  const sunnyIcon = await getWeatherIcon("clear-day");
-  defaultIcons.appendChild(sunnyIcon);
-  const moonIcon = await getWeatherIcon("partly-cloudy-night");
-  defaultIcons.appendChild(moonIcon);
-})();
+// get corresponding temperature unit letter
+function getTempUnit(processedData, tempUnit) {
+  if (tempUnit === "metric") {
+    return "°C";
+  } else {
+    return "°F";
+  }
+};
 
 // display weather info
 async function displayWeatherInfo(processedData, tempUnit) {
@@ -198,23 +164,19 @@ async function displayWeatherInfo(processedData, tempUnit) {
   };
 };
 
-function displayError() {
+// display text for loading, startup, and error messages
+function displayMessage(weatherContainer, message) {
   // clear any existing displayed weather info
   weatherContainer.innerHTML = "";
   currentWeatherContainer.innerHTML = "";
   weeklyWeatherContainer.innerHTML = "";
+  defaultIcons.innerHTML = "";
 
   // default background and text color
   container.style.backgroundColor = "#fff";
   weatherContainer.style.backgroundColor = "#fff";
   weatherContainer.style.color = "#000";
 
-  // display message
-  const errorMessage = "Error finding city, please try again :(";
-  displayMessage(weatherContainer, errorMessage);
-};
-
-function displayMessage(weatherContainer, message) {
   // message
   const noWeatherMessage = document.createElement("p");
   noWeatherMessage.classList = "no-weather-message";
@@ -222,9 +184,7 @@ function displayMessage(weatherContainer, message) {
   weatherContainer.appendChild(noWeatherMessage);
 
   // display default startup weather icons
-  const defaultIcons = document.createElement("div");
   weatherContainer.appendChild(defaultIcons);
-  defaultIcons.classList = "default-icons";
 
   (async () => {
     const cloudyIcon = await getWeatherIcon("cloudy");
@@ -236,15 +196,7 @@ function displayMessage(weatherContainer, message) {
   })();
 };
 
-
-function getTempUnit(processedData, tempUnit) {
-  if (tempUnit === "metric") {
-    return "°C";
-  } else {
-    return "°F";
-  }
-};
-
+// dynamically import weather icons
 export async function getWeatherIcon(weatherIcon) {
   const module = await import(`./weather-icons/${weatherIcon}.svg`);
 
@@ -254,3 +206,48 @@ export async function getWeatherIcon(weatherIcon) {
 
   return img;
 };
+
+// temperature unit
+let tempUnit = "metric";
+
+const tempUnitToggle = document.createElement("input");
+tempUnitToggle.type = "checkbox";
+tempUnitToggle.addEventListener("change", (e) => {
+  e.preventDefault();
+
+  // switch between celsius and fahrenheit
+  if (tempUnitToggle.checked) {
+    tempUnit = "us";
+  } else {
+    tempUnit = "metric";
+  }
+
+  // fetch API and re-render display
+  getWeather(searchLocation.value, tempUnit);
+});
+
+// containers
+const container = document.querySelector(".container");
+const weatherContainer = document.querySelector(".weather-container");
+
+const currentWeatherContainer = document.createElement("div");
+currentWeatherContainer.classList = "current-weather-container";
+
+const weeklyWeatherContainer = document.createElement("div");
+weeklyWeatherContainer.classList = "weekly-weather-container";
+
+const defaultIcons = document.createElement("div");
+defaultIcons.classList = "default-icons";
+
+// location search bar
+const searchLocationForm = document.querySelector("#search-location-form");
+const searchLocation = document.querySelector("#search-location");
+
+searchLocationForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  getWeather(searchLocation.value, tempUnit);
+});
+
+// default startup message
+const message = "Use the search bar to look up the weather of a city!";
+displayMessage(weatherContainer, message);
