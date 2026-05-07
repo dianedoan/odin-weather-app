@@ -7,7 +7,8 @@
 }
 
 :root {
-  --accent-color: #85c1e4;
+  --accent-color: #d3efff;
+  --button-color: #85c1e4;
   --border-color: #383838;
 }
 
@@ -15,23 +16,43 @@ body {
   background-color: #fff;
 }
 
+
 h6 {
   padding: 5px 10px;
   text-align: center;
 }
 
+.no-weather-message {
+  font-size: 1.5rem;
+  padding: 50px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 50px;
-  padding: 60px 30px;
+  gap: 70px;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 30px 35px;
+  background-color: var(--accent-color);
+  border-bottom: 1px solid var(--border-color); 
+}
+
+.app-logo {
+  color: #fff;
+  text-shadow: 2px 2px var(--border-color);
 }
 
 .weather-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 50px;
+  padding: 0 30px;
 }
 
 .current-weather-container {
@@ -82,7 +103,7 @@ button {
 #search-location-btn {
   width: 100px;
   padding: 8px;
-  background-color: var(--accent-color);
+  background-color: var(--button-color);
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
