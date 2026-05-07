@@ -21,6 +21,10 @@ h6 {
   text-align: center;
 }
 
+a {
+  text-decoration: none;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -28,7 +32,7 @@ h6 {
 }
 
 .no-weather-message {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   padding: 50px;
 }
 
@@ -57,6 +61,8 @@ header {
   color: #fff;
   text-shadow: 2px 2px var(--border-color);
   padding-right: 10px;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 #search-location-form {
@@ -101,7 +107,7 @@ input {
   font-size: 1rem;
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  padding: 8px;
+  padding: 10px;
 }
 
 input:focus {
