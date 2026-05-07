@@ -15,11 +15,9 @@ async function getWeather(searchLocation, tempUnit) {
 
     // get data 
     const weatherData = await response.json();
-    console.log(weatherData);
 
     // use only required data for app
     const processedData = processRequiredData(weatherData);
-    console.log(processedData);
 
     // display weather info
     displayWeatherInfo(processedData, tempUnit);
