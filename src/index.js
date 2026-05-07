@@ -1,12 +1,36 @@
 import "./styles.css";
 
-// test variables
-const unit = 'metric'; // toggle temp in Fahrenheit or Celsius later
+// toggle temp in Fahrenheit or Celsius
+let tempUnit = "metric";
+
+const tempUnitToggle = document.createElement("input");
+tempUnitToggle.type = "checkbox";
+tempUnitToggle.id = "temp-unit-toggle";
+
+tempUnitToggle.addEventListener("change", (e) => {
+  e.preventDefault();
+
+  if (tempUnitToggle.checked) {
+    tempUnit = "us";
+  } else {
+    tempUnit = "metric";
+  }
+  getWeather(searchLocation.value, tempUnit);
+});
+
+// location search bar
+const searchLocationForm = document.querySelector("#search-location-form");
+const searchLocation = document.querySelector("#search-location");
+
+searchLocationForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  getWeather(searchLocation.value, tempUnit);
+});
 
 // takes a location and returns the weather data for that location using an API
-async function getWeather(searchLocation) {
+async function getWeather(searchLocation, tempUnit) {
   try {
-    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchLocation}?unitGroup=${unit}&key=QTUFMCGUGM8BXJ6A3KDDSUWYJ`)
+    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchLocation}?unitGroup=${tempUnit}&key=QTUFMCGUGM8BXJ6A3KDDSUWYJ`);
 
     // check for response errors
     if (!response.ok) {
@@ -22,7 +46,7 @@ async function getWeather(searchLocation) {
     console.log(processedData);
 
     // display weather info
-    displayWeatherInfo(processedData);
+    displayWeatherInfo(processedData, tempUnit);
 
   } catch (error) {
     console.error(error);
@@ -71,27 +95,20 @@ weatherContainer.appendChild(defaultIcons);
 defaultIcons.classList = "default-icons";
 
 (async () => {
-  const cloudyIcon = await loadWeatherIcon("cloudy");
+  const cloudyIcon = await getWeatherIcon("cloudy");
   defaultIcons.appendChild(cloudyIcon);
-  const sunnyIcon = await loadWeatherIcon("clear-day");
+  const sunnyIcon = await getWeatherIcon("clear-day");
   defaultIcons.appendChild(sunnyIcon);
-  const moonIcon = await loadWeatherIcon("partly-cloudy-night");
+  const moonIcon = await getWeatherIcon("partly-cloudy-night");
   defaultIcons.appendChild(moonIcon);
 })();
 
-// location search bar
-const searchLocationForm = document.querySelector("#search-location-form");
-const searchLocation = document.querySelector("#search-location");
-
-searchLocationForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  getWeather(searchLocation.value);
-});
-
 // display weather info
-async function displayWeatherInfo(processedData) {
+async function displayWeatherInfo(processedData, tempUnit) {
   // clear any existing displayed weather info
   weatherContainer.innerHTML = "";
+  currentWeatherContainer.innerHTML = "";
+  weeklyWeatherContainer.innerHTML = "";
   
   // append containers
   weatherContainer.appendChild(currentWeatherContainer);
@@ -105,12 +122,22 @@ async function displayWeatherInfo(processedData) {
   currentWeatherContainer.appendChild(locationHeader);
 
   // current temperature
+  const tempContainer = document.createElement("div");
+  tempContainer.classList = "temp-container";
+
   const tempHeader = document.createElement("h1");
-  tempHeader.textContent = `${processedData.currentTemp} °C`;
-  currentWeatherContainer.appendChild(tempHeader);
+
+  displayTempUnit(processedData, tempUnit, tempHeader);
+
+  tempContainer.appendChild(tempHeader);
+
+  // temp unit toggle
+  tempContainer.appendChild(tempUnitToggle);
+
+  currentWeatherContainer.appendChild(tempContainer);
 
   // icon
-  const weatherIcon = await loadWeatherIcon(processedData.icon);
+  const weatherIcon = await getWeatherIcon(processedData.icon);
   currentWeatherContainer.appendChild(weatherIcon);
 
   // description
@@ -138,11 +165,11 @@ async function displayWeatherInfo(processedData) {
 
     // temperature
     const weekTempHeader = document.createElement('h2');
-    weekTempHeader.textContent = `${day.temp} °C`;
+    displayTempUnit(processedData, tempUnit, weekTempHeader);
     upcomingDayItem.append(weekTempHeader);
 
     // icon
-    const weekWeatherIcon = await loadWeatherIcon(day.icon);
+    const weekWeatherIcon = await getWeatherIcon(day.icon);
     weekWeatherIcon.id = "week-weather-icon";
     upcomingDayItem.appendChild(weekWeatherIcon);
 
@@ -153,7 +180,15 @@ async function displayWeatherInfo(processedData) {
   };
 };
 
-export async function loadWeatherIcon(weatherIcon) {
+function displayTempUnit(processedData, tempUnit, tempHeader) {
+  if (tempUnit === "metric") {
+    tempHeader.textContent = `${processedData.currentTemp} °C`;
+  } else {
+    tempHeader.textContent = `${processedData.currentTemp} °F`;
+  }
+};
+
+export async function getWeatherIcon(weatherIcon) {
   const module = await import(`./weather-icons/${weatherIcon}.svg`);
 
   const img = document.createElement("img");
