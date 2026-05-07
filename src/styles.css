@@ -28,7 +28,6 @@ a {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 70px;
 }
 
 .no-weather-message {
@@ -65,6 +64,12 @@ header {
   font-weight: bold;
 }
 
+.search-temp-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
 #search-location-form {
   display: flex;
   align-items: center;
@@ -76,7 +81,8 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 20px;
+  padding: 50px 30px;
+  gap: 30px;
 }
 
 .current-weather-container {
@@ -84,6 +90,78 @@ header {
   flex-direction: column;
   align-items: center;
   gap: 15px;
+}
+
+.temp-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--button-color);
+  font-size: 12px;
+  transition: .4s;
+  border: 2px solid #383838;
+  border-radius: 8px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 6px;
+}
+
+.slider:after {
+  content:'°F';
+  color: var(--border-color);
+  font-weight: bold;
+  display: block;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 75%;
+  font-size: 12px;
+}
+
+input:checked + .slider {
+  background-color: var(--border-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+input:checked + .slider:after {
+  content:'°C';
+  color: #fff;
+  font-weight: bold;
+  top: 50%;
+  left: 25%;
 }
 
 .weekly-weather-container {
@@ -102,7 +180,7 @@ header {
   width: clamp(100px, 150px, 200px);
 }
 
-input { 
+input[type="search"] { 
   width: 100%;
   font-size: 1rem;
   border: 1px solid var(--border-color);
@@ -110,7 +188,7 @@ input {
   padding: 10px;
 }
 
-input:focus {
+input[type="search"]:focus {
   outline: none;
 }
 
