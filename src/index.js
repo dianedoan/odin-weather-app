@@ -1,6 +1,6 @@
 import "./styles.css";
 
-// toggle temp in Fahrenheit or Celsius
+// default temp unit
 let tempUnit = "metric";
 
 const tempUnitToggle = document.createElement("input");
@@ -171,7 +171,7 @@ async function displayWeatherInfo(processedData, tempUnit) {
 
     // temperature
     const weekTempHeader = document.createElement('h2');
-    weekTempHeader.textContent = `${processedData.currentTemp} ${unit}`;
+    weekTempHeader.textContent = `${day.temp} ${unit}`;
     upcomingDayItem.append(weekTempHeader);
 
     // icon
