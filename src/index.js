@@ -84,11 +84,13 @@ async function displayWeatherInfo(processedData, tempUnit) {
     container.style.backgroundColor = "#466a92";
     weatherContainer.style.backgroundColor = "#466a92";
     weatherContainer.style.color = "#fff";
+    iconsCredit.style.backgroundColor = "#466a92";
     iconsCredit.style.color = "#fff";
   } else {
     container.style.backgroundColor = "#e8f7ff";
     weatherContainer.style.backgroundColor = "#e8f7ff";
     weatherContainer.style.color = "#000";
+    iconsCredit.style.backgroundColor = "#e8f7ff";
     iconsCredit.style.color = "#000";
   }
 
