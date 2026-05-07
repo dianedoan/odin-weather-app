@@ -58,20 +58,25 @@ async function displayWeatherInfo(processedData) {
   const currentWeatherContainer = document.createElement("div");
   currentWeatherContainer.classList = "current-weather-container";
 
+  const weeklyWeatherContainer = document.createElement("div");
+  weeklyWeatherContainer.classList = "weekly-weather-container";
+  
   // clear any existing displayed weather info
   weatherContainer.innerHTML = "";
-
+  
   // append containers
   weatherContainer.appendChild(currentWeatherContainer);
+  weatherContainer.appendChild(weeklyWeatherContainer);
   container.appendChild(weatherContainer);
 
   // location
   const locationHeader = document.createElement("h1");
-  locationHeader.textContent = processedData.location;
+  const locationText = processedData.location.charAt(0).toUpperCase() + processedData.location.slice(1).toLowerCase();
+  locationHeader.textContent = locationText;
   currentWeatherContainer.appendChild(locationHeader);
 
   // current temperature
-  const tempHeader = document.createElement("h2");
+  const tempHeader = document.createElement("h1");
   tempHeader.textContent = `${processedData.currentTemp} °C`;
   currentWeatherContainer.appendChild(tempHeader);
 
@@ -79,16 +84,44 @@ async function displayWeatherInfo(processedData) {
   const weatherIcon = await loadWeatherIcon(processedData.icon);
   currentWeatherContainer.appendChild(weatherIcon);
 
+  // description
+  const descriptionHeader = document.createElement("h2");
+  descriptionHeader.textContent = processedData.description;
+  currentWeatherContainer.appendChild(descriptionHeader);
+
   // time
   const timeHeader = document.createElement("h3");
   timeHeader.textContent = `${processedData.currentTime} ${processedData.timezone}`;
   currentWeatherContainer.appendChild(timeHeader);
 
-  // description
-  const descriptionHeader = document.createElement("h3");
-  descriptionHeader.textContent = processedData.description;
-  currentWeatherContainer.appendChild(descriptionHeader);
+  // display weather info for next 7 days
+  const upcomingDayWeather = processedData.nextDays;
+  for (const day of upcomingDayWeather) {
+    // create container
+    const upcomingDayItem = document.createElement("div");
+    upcomingDayItem.classList = "upcoming-weather-item";
+    weeklyWeatherContainer.append(upcomingDayItem);
 
+    // date
+    const weekDateHeader = document.createElement('h3');
+    weekDateHeader.textContent = day.date;
+    upcomingDayItem.append(weekDateHeader);
+
+    // temperature
+    const weekTempHeader = document.createElement('h2');
+    weekTempHeader.textContent = `${day.temp} °C`;
+    upcomingDayItem.append(weekTempHeader);
+
+    // icon
+    const weekWeatherIcon = await loadWeatherIcon(day.icon);
+    weekWeatherIcon.id = "week-weather-icon";
+    upcomingDayItem.appendChild(weekWeatherIcon);
+
+    // description
+    const weekDescriptionHeader = document.createElement('h6');
+    weekDescriptionHeader.textContent = day.description;
+    upcomingDayItem.append(weekDescriptionHeader);
+  };
 };
 
 export async function loadWeatherIcon(weatherIcon) {
