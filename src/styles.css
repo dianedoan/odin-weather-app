@@ -7,7 +7,7 @@
 }
 
 :root {
-  --accent-color: #d3efff;
+  --accent-color: #f3f3f3;
   --button-color: #85c1e4;
   --border-color: #383838;
 }
@@ -28,6 +28,7 @@ a {
 .container {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .no-weather-message {
@@ -37,9 +38,12 @@ a {
 
 .default-icons {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 30px;
+
 }
 
 .default-icons img {
@@ -57,7 +61,7 @@ header {
 }
 
 .app-logo {
-  color: #fff;
+  color: var(--button-color);;
   text-shadow: 2px 2px var(--border-color);
   padding-right: 10px;
   font-size: 2rem;

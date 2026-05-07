@@ -61,6 +61,9 @@ function processRequiredData(data) {
     currentTemp: data.currentConditions.temp,
     description: data.description,
     icon: data.currentConditions.icon,
+    currentDateTimeEpoch: data.currentConditions.datetimeEpoch,
+    sunriseEpoch: data.currentConditions.sunriseEpoch,
+    sunsetEpoch: data.currentConditions.sunsetEpoch,
     nextDays: [
       {date: data.days[0].datetime, temp: data.days[0].temp, description: data.days[0].description, icon: data.days[0].icon},
       {date: data.days[1].datetime, temp: data.days[1].temp, description: data.days[1].description, icon: data.days[1].icon},
@@ -113,6 +116,21 @@ async function displayWeatherInfo(processedData, tempUnit) {
   weatherContainer.appendChild(currentWeatherContainer);
   weatherContainer.appendChild(weeklyWeatherContainer);
   container.appendChild(weatherContainer);
+
+  // set background color based on sunrise and sunset
+  const currentDate = new Date(processedData.currentDateTimeEpoch * 1000);
+  const sunriseDate = new Date(processedData.sunriseEpoch * 1000);
+  const sunsetDate = new Date(processedData.sunsetEpoch * 1000);
+
+  if (currentDate >= sunsetDate || currentDate < sunriseDate) {
+    container.style.backgroundColor = "#466a92";
+    weatherContainer.style.backgroundColor = "#466a92";
+    weatherContainer.style.color = "#fff";
+  } else {
+    container.style.backgroundColor = "#e8f7ff";
+    weatherContainer.style.backgroundColor = "#e8f7ff";
+    weatherContainer.style.color = "#000";
+  }
 
   // location
   const locationHeader = document.createElement("h1");
