@@ -50,17 +50,46 @@ function processRequiredData(data) {
   };
 };
 
+const container = document.querySelector(".container");
+const weatherContainer = document.querySelector(".weather-container");
+
+const currentWeatherContainer = document.createElement("div");
+currentWeatherContainer.classList = "current-weather-container";
+
+const weeklyWeatherContainer = document.createElement("div");
+weeklyWeatherContainer.classList = "weekly-weather-container";
+
+// default startup message
+const noWeatherMessage = document.createElement("p");
+noWeatherMessage.classList = "no-weather-message";
+noWeatherMessage.textContent = "Use the search bar to look up the weather of a city!";
+weatherContainer.appendChild(noWeatherMessage);
+
+// display default startup weather icons
+const defaultIcons = document.createElement("div");
+weatherContainer.appendChild(defaultIcons);
+defaultIcons.classList = "default-icons";
+
+(async () => {
+  const cloudyIcon = await loadWeatherIcon("cloudy");
+  defaultIcons.appendChild(cloudyIcon);
+  const sunnyIcon = await loadWeatherIcon("clear-day");
+  defaultIcons.appendChild(sunnyIcon);
+  const moonIcon = await loadWeatherIcon("partly-cloudy-night");
+  defaultIcons.appendChild(moonIcon);
+})();
+
+// location search bar
+const searchLocationForm = document.querySelector("#search-location-form");
+const searchLocation = document.querySelector("#search-location");
+
+searchLocationForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  getWeather(searchLocation.value);
+});
+
 // display weather info
 async function displayWeatherInfo(processedData) {
-  const container = document.querySelector(".container");
-  const weatherContainer = document.querySelector(".weather-container");
-
-  const currentWeatherContainer = document.createElement("div");
-  currentWeatherContainer.classList = "current-weather-container";
-
-  const weeklyWeatherContainer = document.createElement("div");
-  weeklyWeatherContainer.classList = "weekly-weather-container";
-  
   // clear any existing displayed weather info
   weatherContainer.innerHTML = "";
   
@@ -133,13 +162,3 @@ export async function loadWeatherIcon(weatherIcon) {
 
   return img;
 };
-
-// location search bar
-const searchLocationForm = document.querySelector("#search-location-form");
-const searchLocation = document.querySelector("#search-location");
-
-searchLocationForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  getWeather(searchLocation.value);
-});
-
