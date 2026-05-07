@@ -23,17 +23,25 @@ h6 {
 
 a {
   text-decoration: none;
+  color: var(--button-color);
+}
+
+.icons-credit {
+  color: var(--border-color);
+  text-align: center;
+  padding: 10px;
+  font-size: 0.8rem;
 }
 
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100vh;
 }
 
-.no-weather-message {
+.weather-message {
   font-size: 1.7rem;
-  padding: 50px;
 }
 
 .default-icons {

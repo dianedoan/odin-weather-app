@@ -84,10 +84,12 @@ async function displayWeatherInfo(processedData, tempUnit) {
     container.style.backgroundColor = "#466a92";
     weatherContainer.style.backgroundColor = "#466a92";
     weatherContainer.style.color = "#fff";
+    iconsCredit.style.color = "#fff";
   } else {
     container.style.backgroundColor = "#e8f7ff";
     weatherContainer.style.backgroundColor = "#e8f7ff";
     weatherContainer.style.color = "#000";
+    iconsCredit.style.color = "#000";
   }
 
   // location
@@ -160,6 +162,9 @@ async function displayWeatherInfo(processedData, tempUnit) {
     weekDescriptionHeader.textContent = day.description;
     upcomingDayItem.append(weekDescriptionHeader);
   };
+
+  // icons credit
+  container.appendChild(iconsCredit);
 };
 
 // display text for loading, startup, and error messages
@@ -177,7 +182,7 @@ function displayMessage(weatherContainer, message) {
 
   // message
   const noWeatherMessage = document.createElement("p");
-  noWeatherMessage.classList = "no-weather-message";
+  noWeatherMessage.classList = "weather-message";
   noWeatherMessage.textContent = message;
   weatherContainer.appendChild(noWeatherMessage);
 
@@ -236,6 +241,8 @@ weeklyWeatherContainer.classList = "weekly-weather-container";
 
 const defaultIcons = document.createElement("div");
 defaultIcons.classList = "default-icons";
+
+const iconsCredit = document.querySelector(".icons-credit");
 
 // location search bar
 const searchLocationForm = document.querySelector("#search-location-form");
