@@ -42,6 +42,7 @@ a {
 
 .weather-message {
   font-size: 1.7rem;
+  text-align: center;
 }
 
 .default-icons {
