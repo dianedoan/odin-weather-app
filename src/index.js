@@ -5,7 +5,6 @@ let tempUnit = "metric";
 
 const tempUnitToggle = document.createElement("input");
 tempUnitToggle.type = "checkbox";
-tempUnitToggle.id = "temp-unit-toggle";
 
 tempUnitToggle.addEventListener("change", (e) => {
   e.preventDefault();
@@ -126,13 +125,20 @@ async function displayWeatherInfo(processedData, tempUnit) {
   tempContainer.classList = "temp-container";
 
   const tempHeader = document.createElement("h1");
-
-  displayTempUnit(processedData, tempUnit, tempHeader);
+  const unit = getTempUnit(processedData, tempUnit);
+  tempHeader.textContent = `${processedData.currentTemp} ${unit}`;
 
   tempContainer.appendChild(tempHeader);
 
   // temp unit toggle
-  tempContainer.appendChild(tempUnitToggle);
+  const toggle = document.createElement("label");
+  toggle.classList = "toggle";
+  const toggleSlider = document.createElement("span");
+  toggleSlider.classList = "slider";
+
+  toggle.appendChild(tempUnitToggle);
+  toggle.appendChild(toggleSlider);
+  tempContainer.appendChild(toggle);
 
   currentWeatherContainer.appendChild(tempContainer);
 
@@ -165,7 +171,7 @@ async function displayWeatherInfo(processedData, tempUnit) {
 
     // temperature
     const weekTempHeader = document.createElement('h2');
-    displayTempUnit(processedData, tempUnit, weekTempHeader);
+    weekTempHeader.textContent = `${processedData.currentTemp} ${unit}`;
     upcomingDayItem.append(weekTempHeader);
 
     // icon
@@ -180,11 +186,11 @@ async function displayWeatherInfo(processedData, tempUnit) {
   };
 };
 
-function displayTempUnit(processedData, tempUnit, tempHeader) {
+function getTempUnit(processedData, tempUnit) {
   if (tempUnit === "metric") {
-    tempHeader.textContent = `${processedData.currentTemp} °C`;
+    return "°C";
   } else {
-    tempHeader.textContent = `${processedData.currentTemp} °F`;
+    return "°F";
   }
 };
 
