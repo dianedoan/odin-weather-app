@@ -49,6 +49,7 @@ async function getWeather(searchLocation, tempUnit) {
 
   } catch (error) {
     console.error(error);
+    displayError();
   }
 };
 
@@ -86,15 +87,8 @@ const weeklyWeatherContainer = document.createElement("div");
 weeklyWeatherContainer.classList = "weekly-weather-container";
 
 // default startup message
-const noWeatherMessage = document.createElement("p");
-noWeatherMessage.classList = "no-weather-message";
-noWeatherMessage.textContent = "Use the search bar to look up the weather of a city!";
-weatherContainer.appendChild(noWeatherMessage);
-
-// display default startup weather icons
-const defaultIcons = document.createElement("div");
-weatherContainer.appendChild(defaultIcons);
-defaultIcons.classList = "default-icons";
+const message = "Use the search bar to look up the weather of a city!";
+displayMessage(weatherContainer, message);
 
 (async () => {
   const cloudyIcon = await getWeatherIcon("cloudy");
@@ -203,6 +197,45 @@ async function displayWeatherInfo(processedData, tempUnit) {
     upcomingDayItem.append(weekDescriptionHeader);
   };
 };
+
+function displayError() {
+  // clear any existing displayed weather info
+  weatherContainer.innerHTML = "";
+  currentWeatherContainer.innerHTML = "";
+  weeklyWeatherContainer.innerHTML = "";
+
+  // default background and text color
+  container.style.backgroundColor = "#fff";
+  weatherContainer.style.backgroundColor = "#fff";
+  weatherContainer.style.color = "#000";
+
+  // display message
+  const errorMessage = "Could not find city, please try again :(";
+  displayMessage(weatherContainer, errorMessage);
+};
+
+function displayMessage(weatherContainer, message) {
+  // message
+  const noWeatherMessage = document.createElement("p");
+  noWeatherMessage.classList = "no-weather-message";
+  noWeatherMessage.textContent = message;
+  weatherContainer.appendChild(noWeatherMessage);
+
+  // display default startup weather icons
+  const defaultIcons = document.createElement("div");
+  weatherContainer.appendChild(defaultIcons);
+  defaultIcons.classList = "default-icons";
+
+  (async () => {
+    const cloudyIcon = await getWeatherIcon("cloudy");
+    defaultIcons.appendChild(cloudyIcon);
+    const sunnyIcon = await getWeatherIcon("clear-day");
+    defaultIcons.appendChild(sunnyIcon);
+    const moonIcon = await getWeatherIcon("partly-cloudy-night");
+    defaultIcons.appendChild(moonIcon);
+  })();
+};
+
 
 function getTempUnit(processedData, tempUnit) {
   if (tempUnit === "metric") {
